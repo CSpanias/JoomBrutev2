@@ -14,7 +14,7 @@ This tool performs a dictionary attack against Joomla administrator login pages.
 ## Usage:
 Run the script with required parameters:
 ```bash
-python3 joombrute.py --url http://target/administrator --username admin --wordlist passwords.txt [--ua USER_AGENT] [--delay SECONDS]
+python3 joombrutev2.py --url http://target/administrator --username admin --wordlist passwords.txt [--ua USER_AGENT] [--delay SECONDS]
 ```
 
 ## Requirements:
